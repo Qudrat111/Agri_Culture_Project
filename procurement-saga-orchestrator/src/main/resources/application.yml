@@ -6,9 +6,9 @@ spring:
     name: procurement-saga-orchestrator
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/agri_procurement
-    username: postgres
-    password: postgres
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/agri_procurement}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   
   jpa:
@@ -73,4 +73,4 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n [sagaId=%X{sagaId}] [orderId=%X{orderId}] [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [sagaId=%X{sagaId}] [orderId=%X{orderId}] [%thread] %-5level %logger{36} - %msg%n"

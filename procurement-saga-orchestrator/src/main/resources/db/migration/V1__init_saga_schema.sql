@@ -1,6 +1,8 @@
 CREATE TABLE procurement_sagas (
     id VARCHAR(36) PRIMARY KEY,
     order_id VARCHAR(36) NOT NULL,
+    buyer_id VARCHAR(36),
+    total_amount DECIMAL(19, 2),
     status VARCHAR(20) NOT NULL,
     current_step VARCHAR(30) NOT NULL,
     inventory_reserved BOOLEAN DEFAULT FALSE,

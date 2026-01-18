@@ -22,6 +22,12 @@ public class ProcurementSaga {
     @Column(name = "order_id", nullable = false)
     private String orderId;
     
+    @Column(name = "buyer_id")
+    private String buyerId;
+    
+    @Column(name = "total_amount")
+    private java.math.BigDecimal totalAmount;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SagaStatus status;
@@ -90,10 +96,12 @@ public class ProcurementSaga {
         this.currentStep = SagaStep.COMPLETED;
     }
     
-    public static ProcurementSaga create(String sagaId, String orderId) {
+    public static ProcurementSaga create(String sagaId, String orderId, String buyerId, java.math.BigDecimal totalAmount) {
         ProcurementSaga saga = new ProcurementSaga();
         saga.setId(sagaId);
         saga.setOrderId(orderId);
+        saga.setBuyerId(buyerId);
+        saga.setTotalAmount(totalAmount);
         saga.setStatus(SagaStatus.STARTED);
         saga.setCurrentStep(SagaStep.RESERVE_INVENTORY);
         saga.setInventoryReserved(false);

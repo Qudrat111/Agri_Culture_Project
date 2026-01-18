@@ -46,7 +46,7 @@ public class SagaOrchestrator {
                 return;
             }
             
-            ProcurementSaga saga = ProcurementSaga.create(sagaId, orderId);
+            ProcurementSaga saga = ProcurementSaga.create(sagaId, orderId, event.getBuyerId(), event.getTotalAmount());
             sagaRepository.save(saga);
             
             log.info("Saga created with id: {} for orderId: {}", sagaId, orderId);
@@ -90,8 +90,8 @@ public class SagaOrchestrator {
             
             ProcessPaymentCommand command = new ProcessPaymentCommand(
                 orderId, 
-                "buyer-placeholder",
-                java.math.BigDecimal.ZERO
+                saga.getBuyerId(),
+                saga.getTotalAmount()
             );
             commandPublisher.publishProcessPaymentCommand(command);
             
