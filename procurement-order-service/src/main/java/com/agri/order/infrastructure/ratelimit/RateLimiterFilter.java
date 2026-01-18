@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RateLimiterFilter implements Filter {
     
     private static final String CLIENT_ID_HEADER = "X-Client-Id";
+    private static final int MAX_CACHE_SIZE = 10000;
     
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
     
@@ -45,6 +46,12 @@ public class RateLimiterFilter implements Filter {
         }
         
         Bucket bucket = buckets.computeIfAbsent(clientId, this::createBucket);
+        
+        // Simple cache size limit
+        if (buckets.size() > MAX_CACHE_SIZE) {
+            log.warn("Rate limiter cache size exceeded, clearing old entries");
+            buckets.clear();
+        }
         
         if (bucket.tryConsume(1)) {
             chain.doFilter(request, response);

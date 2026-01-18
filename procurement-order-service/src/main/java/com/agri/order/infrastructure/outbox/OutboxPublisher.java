@@ -33,13 +33,14 @@ public class OutboxPublisher {
             return;
         }
         
-        log.info("Publishing {} outbox events to Kafka", events.size());
+        int totalEvents = events.size();
+        int eventsToProcess = Math.min(totalEvents, batchSize);
+        
+        log.info("Publishing {} outbox events to Kafka (total unprocessed: {})", eventsToProcess, totalEvents);
         
         int published = 0;
-        for (OutboxEvent event : events) {
-            if (published >= batchSize) {
-                break;
-            }
+        for (int i = 0; i < eventsToProcess; i++) {
+            OutboxEvent event = events.get(i);
             
             try {
                 kafkaTemplate.send(TOPIC, event.getAggregateId(), event.getPayload())

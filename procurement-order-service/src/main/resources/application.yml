@@ -58,8 +58,6 @@ logging:
     com.agri.order: DEBUG
     org.springframework.web: INFO
     org.springframework.kafka: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%X{traceId:-}] [%X{orderId:-}] %-5level %logger{36} - %msg%n"
 
