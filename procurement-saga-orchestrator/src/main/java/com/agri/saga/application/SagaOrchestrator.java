@@ -215,24 +215,11 @@ public class SagaOrchestrator {
     }
     
     private ProcurementSaga findSagaByOrderId(String orderId) {
-        Optional<ProcurementSaga> sagaOpt = sagaRepository.findByOrderId(orderId);
-        if (sagaOpt.isEmpty()) {
-            log.error("No saga found for orderId: {}", orderId);
-            return null;
-        }
-        
-        ProcurementSaga saga = sagaOpt.get();
-        
-        if (saga.getStatus() == SagaStatus.COMPLETED) {
-            log.warn("Saga already completed for orderId: {}", orderId);
-            return null;
-        }
-        
-        if (saga.getStatus() == SagaStatus.FAILED) {
-            log.warn("Saga already failed for orderId: {}", orderId);
-            return null;
-        }
-        
-        return saga;
+        return sagaRepository.findByOrderId(orderId)
+            .filter(saga -> saga.getStatus() != SagaStatus.COMPLETED && saga.getStatus() != SagaStatus.FAILED)
+            .orElseGet(() -> {
+                log.error("No active saga found for orderId: {}", orderId);
+                return null;
+            });
     }
 }
