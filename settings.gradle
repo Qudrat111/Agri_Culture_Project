@@ -2,3 +2,4 @@ rootProject.name = 'digital-procurement-platform'
 
 include 'procurement-common'
 include 'procurement-order-service'
+include 'procurement-saga-orchestrator'
