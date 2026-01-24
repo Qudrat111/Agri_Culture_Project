@@ -1,7 +1,7 @@
 namespace: agri
 
 image:
-  registry: ghcr.io/your-org/your-repo
+  registry: ghcr.io/Qudrat111/agri_culture_project
   tag: latest
 
 services:
