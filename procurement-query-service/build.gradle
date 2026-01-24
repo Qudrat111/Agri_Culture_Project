@@ -35,6 +35,7 @@ dependencies {
     // Observability
     implementation 'io.micrometer:micrometer-tracing-bridge-otel'
     implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     
     // Rate Limiting
     implementation 'com.bucket4j:bucket4j-core:8.10.1'

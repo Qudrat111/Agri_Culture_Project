@@ -7,6 +7,7 @@ import com.agri.saga.domain.SagaStep;
 import com.agri.saga.event.*;
 import com.agri.saga.infrastructure.kafka.CommandPublisher;
 import com.agri.saga.infrastructure.repository.SagaRepository;
+import com.agri.saga.observability.SagaMetrics;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,12 @@ public class SagaOrchestrator {
     
     private final SagaRepository sagaRepository;
     private final CommandPublisher commandPublisher;
+    private final SagaMetrics metrics;
     
-    public SagaOrchestrator(SagaRepository sagaRepository, CommandPublisher commandPublisher) {
+    public SagaOrchestrator(SagaRepository sagaRepository, CommandPublisher commandPublisher, SagaMetrics metrics) {
         this.sagaRepository = sagaRepository;
         this.commandPublisher = commandPublisher;
+        this.metrics = metrics;
     }
     
     @Transactional
@@ -59,6 +62,7 @@ public class SagaOrchestrator {
             commandPublisher.publishReserveInventoryCommand(command);
             
             log.info("Saga started successfully, RESERVE_INVENTORY command published");
+            metrics.incStarted();
         } finally {
             MDC.clear();
         }
@@ -117,8 +121,10 @@ public class SagaOrchestrator {
             saga.startCompensation();
             saga.fail("Inventory reservation failed: " + event.getReason());
             sagaRepository.save(saga);
+            metrics.incFailed();
             
             log.info("Saga marked as FAILED. No compensation needed as no steps completed.");
+            metrics.incFailed();
         } finally {
             MDC.clear();
         }
@@ -180,8 +186,10 @@ public class SagaOrchestrator {
             
             saga.fail("Payment failed: " + event.getReason());
             sagaRepository.save(saga);
+            metrics.incFailed();
             
             log.info("Saga marked as FAILED. Compensation initiated.");
+            metrics.incFailed();
         } finally {
             MDC.clear();
         }
@@ -207,8 +215,11 @@ public class SagaOrchestrator {
             
             saga.complete();
             sagaRepository.save(saga);
+            metrics.incCompleted();
+            metrics.incCompleted();
             
             log.info("Saga completed successfully for orderId: {}", orderId);
+            metrics.incCompleted();
         } finally {
             MDC.clear();
         }

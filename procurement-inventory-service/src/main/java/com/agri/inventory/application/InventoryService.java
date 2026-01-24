@@ -9,6 +9,7 @@ import com.agri.inventory.event.InventoryReservedEvent;
 import com.agri.inventory.infrastructure.kafka.EventPublisher;
 import com.agri.inventory.infrastructure.repository.InventoryItemRepository;
 import com.agri.inventory.infrastructure.repository.ReservationRepository;
+import com.agri.inventory.observability.InventoryMetrics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -28,6 +29,8 @@ public class InventoryService {
     private final InventoryItemRepository inventoryItemRepository;
     private final ReservationRepository reservationRepository;
     private final EventPublisher eventPublisher;
+    private final InventoryMetrics metrics;
+    private final InventoryMetrics metrics;
     
     /**
      * Reserve inventory for an order.
@@ -45,6 +48,7 @@ public class InventoryService {
             if (!existingReservations.isEmpty()) {
                 log.info("Reservation already exists for order: {}, treating as idempotent request", command.orderId());
                 publishSuccessEvent(command.orderId(), existingReservations);
+                metrics.incSuccess();
                 return;
             }
             
@@ -60,6 +64,7 @@ public class InventoryService {
                     eventPublisher.publishInventoryReservationFailedEvent(
                         new InventoryReservationFailedEvent(command.orderId(), reason)
                     );
+                    metrics.incFail();
                     return;
                 }
                 
@@ -76,6 +81,7 @@ public class InventoryService {
                     eventPublisher.publishInventoryReservationFailedEvent(
                         new InventoryReservationFailedEvent(command.orderId(), reason)
                     );
+                    metrics.incFail();
                     return;
                 }
                 
@@ -107,6 +113,7 @@ public class InventoryService {
             
             // Publish success event
             publishSuccessEvent(command.orderId(), reservations);
+            metrics.incSuccess();
             log.info("Successfully reserved inventory for order: {}", command.orderId());
             
         } catch (Exception e) {
@@ -118,6 +125,7 @@ public class InventoryService {
                     "Error processing reservation: " + e.getMessage()
                 )
             );
+            metrics.incFail();
         } finally {
             MDC.remove("orderId");
         }
@@ -160,6 +168,7 @@ public class InventoryService {
             
             // Delete reservations
             reservationRepository.deleteAll(reservations);
+            metrics.incCompensation();
             log.info("Successfully released inventory for order: {} ({} items)", 
                 command.orderId(), reservations.size());
             

@@ -1,6 +1,7 @@
 package com.agri.query.api;
 
 import com.agri.query.model.OrderView;
+import com.agri.query.observability.QueryMetrics;
 import com.agri.query.repository.OrderViewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,12 @@ import java.util.stream.Collectors;
 public class OrderQueryController {
 
     private final OrderViewRepository orderViewRepository;
+    private final QueryMetrics metrics;
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderViewResponse> getOrderById(@PathVariable String orderId) {
         MDC.put("orderId", orderId);
+        metrics.incRequest();
         
         try {
             log.info("Fetching order by ID: {}", orderId);
@@ -39,6 +42,7 @@ public class OrderQueryController {
                 });
                 
         } catch (Exception e) {
+            metrics.incFailure();
             log.error("Error fetching order: {}", orderId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } finally {
@@ -52,6 +56,7 @@ public class OrderQueryController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
+        metrics.incRequest();
         try {
             log.info("Fetching orders for buyer: {}, page: {}, size: {}", buyerId, page, size);
             
@@ -66,6 +71,7 @@ public class OrderQueryController {
             return ResponseEntity.ok(responses);
             
         } catch (Exception e) {
+            metrics.incFailure();
             log.error("Error fetching orders for buyer: {}", buyerId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -77,6 +83,7 @@ public class OrderQueryController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
+        metrics.incRequest();
         try {
             log.info("Fetching orders for supplier: {}, page: {}, size: {}", supplierId, page, size);
             
@@ -91,6 +98,7 @@ public class OrderQueryController {
             return ResponseEntity.ok(responses);
             
         } catch (Exception e) {
+            metrics.incFailure();
             log.error("Error fetching orders for supplier: {}", supplierId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -102,6 +110,7 @@ public class OrderQueryController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
+        metrics.incRequest();
         try {
             log.info("Fetching all orders with status: {}, page: {}, size: {}", status, page, size);
             
@@ -122,6 +131,7 @@ public class OrderQueryController {
             return ResponseEntity.ok(responses);
             
         } catch (Exception e) {
+            metrics.incFailure();
             log.error("Error fetching orders", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

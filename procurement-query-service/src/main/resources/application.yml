@@ -7,11 +7,11 @@ spring:
   
   data:
     mongodb:
-      uri: mongodb://localhost:27017/agri_procurement_read
+      uri: ${MONGODB_URI:mongodb://mongodb:27017/agri_procurement_read}
       auto-index-creation: true
   
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     consumer:
       group-id: query-projector-group
       auto-offset-reset: earliest
@@ -51,7 +51,7 @@ management:
       probability: 1.0
   otlp:
     tracing:
-      endpoint: http://localhost:4318/v1/traces
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://otel-collector:4318/v1/traces}
 
 # Rate limiting configuration
 rate-limit:

@@ -6,7 +6,7 @@ spring:
     name: procurement-order-service
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/agri_procurement
+    url: jdbc:postgresql://${DB_HOST:postgresql}:${DB_PORT:5432}/agri_procurement
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -37,7 +37,7 @@ spring:
     validate-on-migrate: true
   
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -79,7 +79,7 @@ management:
       probability: 1.0
   otlp:
     tracing:
-      endpoint: http://localhost:4318/v1/traces
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://otel-collector:4318/v1/traces}
 
 # Application specific
 procurement:

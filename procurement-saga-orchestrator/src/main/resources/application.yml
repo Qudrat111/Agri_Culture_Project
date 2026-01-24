@@ -6,7 +6,7 @@ spring:
     name: procurement-saga-orchestrator
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/agri_procurement
+    url: jdbc:postgresql://${DB_HOST:postgresql}:${DB_PORT:5432}/agri_procurement
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -31,7 +31,7 @@ spring:
     baseline-version: 0
   
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     consumer:
       group-id: saga-orchestrator-group
       auto-offset-reset: earliest

@@ -11,6 +11,7 @@ import com.agri.order.domain.vo.SupplierId;
 import com.agri.order.infrastructure.repository.IdempotencyKeyRepository;
 import com.agri.order.infrastructure.repository.OrderRepository;
 import com.agri.order.infrastructure.repository.OutboxEventRepository;
+import com.agri.order.observability.OrderMetrics;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class OrderCommandService {
     private final OutboxEventRepository outboxEventRepository;
     private final IdempotencyKeyRepository idempotencyKeyRepository;
     private final ObjectMapper objectMapper;
+    private final OrderMetrics metrics;
     
     @Transactional
     public OrderResponse createOrder(CreateOrderRequest request, String idempotencyKey) {
@@ -86,7 +88,10 @@ public class OrderCommandService {
             throw new RuntimeException("Failed to save idempotency key", e);
         }
         
+        metrics.incCreated();
+
         MDC.remove("orderId");
+        metrics.incCreated();
         return response;
     }
     
@@ -107,6 +112,7 @@ public class OrderCommandService {
         }
         order.clearDomainEvents();
         
+        metrics.incConfirmed();
         log.info("Order confirmed: {}", orderId);
         MDC.remove("orderId");
         return OrderResponse.from(order);
@@ -129,6 +135,7 @@ public class OrderCommandService {
         }
         order.clearDomainEvents();
         
+        metrics.incCancelled();
         log.info("Order cancelled: {}", orderId);
         MDC.remove("orderId");
         return OrderResponse.from(order);
