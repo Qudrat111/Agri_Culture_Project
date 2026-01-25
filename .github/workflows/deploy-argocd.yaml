@@ -70,8 +70,8 @@ jobs:
 
       - name: Update Helm production values
         run: |
-          yq -i '.image.registry = "ghcr.io/${{ env.IMAGE_REPO }}"' deploy/charts/agri-platform/values-prod.yaml
-          yq -i '.image.tag = "${{ github.sha }}"' deploy/charts/agri-platform/values-prod.yaml
+          yq -i '.image.registry = "ghcr.io/${{ env.IMAGE_REPO }}"' deploy/charts/agri-platform/values.yaml
+          yq -i '.image.tag = "${{ github.sha }}"' deploy/charts/agri-platform/values.yaml
 
       - name: Commit and push
         run: |
