@@ -30,7 +30,6 @@ public class InventoryService {
     private final ReservationRepository reservationRepository;
     private final EventPublisher eventPublisher;
     private final InventoryMetrics metrics;
-    private final InventoryMetrics metrics;
     
     /**
      * Reserve inventory for an order.
