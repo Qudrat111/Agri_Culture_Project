@@ -1,10 +1,8 @@
 namespace: agri
-
 image:
   # GitHub Actions updates this field after each build.
   registry: ghcr.io/qudrat111/agri_culture_project
-  tag: "latest"
-
+  tag: "52dd6cada66d7748ad143fc1cbcc9c4e23ac3598"
 services:
   order:
     replicas: 2
@@ -15,7 +13,6 @@ services:
   query:
     replicas: 2
     serviceType: LoadBalancer
-
 resources:
   requests:
     cpu: 100m
@@ -23,7 +20,6 @@ resources:
   limits:
     cpu: 750m
     memory: 1Gi
-
 prometheus:
   scrape: true
   path: /actuator/prometheus
