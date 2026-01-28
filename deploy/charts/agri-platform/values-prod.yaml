@@ -2,7 +2,7 @@ namespace: agri
 image:
   # GitHub Actions updates this field after each build.
   registry: ghcr.io/qudrat111/agri_culture_project
-  tag: "94842ea157f44cf2873a5a5057dfe6a6765b45fb"
+  tag: "245fa7ae0dc2002879b013dae558872a8b5b097b"
 services:
   order:
     replicas: 1
