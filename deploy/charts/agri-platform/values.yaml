@@ -18,7 +18,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql.agri.svc.cluster.local:5432/agri_procurement
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_FLYWAY_ENABLED: "false"
   saga:
     module: procurement-saga-orchestrator
@@ -35,7 +35,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql.agri.svc.cluster.local:5432/agri_procurement
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_FLYWAY_ENABLED: "false"
   inventory:
     module: procurement-inventory-service
@@ -52,7 +52,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql.agri.svc.cluster.local:5432/agri_procurement
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_FLYWAY_ENABLED: "false"
   query:
     module: procurement-query-service
@@ -66,7 +66,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql.agri.svc.cluster.local:5432/agri_procurement
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_FLYWAY_ENABLED: "false"
 resources:
   requests:
